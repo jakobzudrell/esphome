@@ -1,0 +1,17 @@
+i2c:
+  - id: i2c_ens161
+    scl: ${scl_pin}
+    sda: ${sda_pin}
+
+sensor:
+  - platform: ens161_i2c
+    i2c_id: i2c_ens161
+    address: 0x52
+    eco2:
+      name: "ENS161 eCO2"
+    tvoc:
+      name: "ENS161 Total Volatile Organic Compounds"
+    ethanol:
+      name: "ENS161 Ethanol Concentration"
+    aqi:
+      name: "ENS161 Air Quality Index"
