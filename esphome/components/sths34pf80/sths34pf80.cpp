@@ -191,8 +191,18 @@ void STHS34PF80Component::update() {
       this->status_set_warning();
       return;
     }
-    this->presence_sensor_->publish_state(flags[0] & (1 << 2));
-    this->motion_sensor_->publish_state(flags[0] & (1 << 1));
+
+    if (flags[0] & (1 << 2)) {
+      this->presence_sensor_->publish_state(1);
+    } else {
+      this->presence_sensor_->publish_state(0);
+    }
+
+    if (flags[0] & (1 << 1)) {
+      this->motion_sensor_->publish_state(1);
+    } else {
+      this->motion_sensor_->publish_state(0);
+    }
   }
 }
 }  // namespace sths34pf80

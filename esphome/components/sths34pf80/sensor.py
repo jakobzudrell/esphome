@@ -2,11 +2,8 @@ import esphome.codegen as cg
 from esphome.components import i2c, sensor
 import esphome.config_validation as cv
 from esphome.const import (
-    CONF_HUMIDITY,
     CONF_ID,
-    CONF_TEMPERATURE,
-    DEVICE_CLASS_HUMIDITY,
-    DEVICE_CLASS_TEMPERATURE,
+    DEVICE_CLASS_EMPTY,
     STATE_CLASS_MEASUREMENT,
     UNIT_EMPTY,
 )
@@ -24,14 +21,16 @@ CONFIG_SCHEMA = (
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(STHS34PF80Component),
-            cv.Optional(CONF_TEMPERATURE): sensor.sensor_schema(
+            cv.Optional("presence"): sensor.sensor_schema(
                 unit_of_measurement=UNIT_EMPTY,
-                device_class=DEVICE_CLASS_TEMPERATURE,
+                accuracy_decimals=0,
+                device_class=DEVICE_CLASS_EMPTY,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
-            cv.Optional(CONF_HUMIDITY): sensor.sensor_schema(
+            cv.Optional("motion"): sensor.sensor_schema(
                 unit_of_measurement=UNIT_EMPTY,
-                device_class=DEVICE_CLASS_HUMIDITY,
+                accuracy_decimals=0,
+                device_class=DEVICE_CLASS_EMPTY,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
         }
@@ -46,10 +45,10 @@ async def to_code(config):
     await cg.register_component(var, config)
     await i2c.register_i2c_device(var, config)
 
-    if CONF_TEMPERATURE in config:
-        sens = await sensor.new_sensor(config[CONF_TEMPERATURE])
+    if "presence" in config:
+        sens = await sensor.new_sensor(config["presence"])
         cg.add(var.set_presence_sensor(sens))
 
-    if CONF_HUMIDITY in config:
-        sens = await sensor.new_sensor(config[CONF_HUMIDITY])
+    if "motion" in config:
+        sens = await sensor.new_sensor(config["motion"])
         cg.add(var.set_motion_sensor(sens))
