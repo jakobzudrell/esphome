@@ -5,8 +5,8 @@ i2c:
 
 sensor:
   - platform: sths34pf80
-    presence:
+    temperature:
       name: STHS34PF80 Presence
-    motion:
+    humidity:
       name: STHS34PF80 Motion
     update_interval: 15s

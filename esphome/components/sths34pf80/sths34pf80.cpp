@@ -111,9 +111,9 @@ void STHS34PF80Component::setup() {
   this->write_byte(STHS34PF80_REGISTER_CTRL3, 0x00);
 
   //// CONFIGURE ALGORITHMS
-  uint8_t PRESENCE_THRESHOLD = 100;     // default 200
-  uint8_t MOTION_THRESHOLD = 200;       // default 200
-  uint8_t TAMB_SHOCK_THRESHOLD = 2000;  // default 200
+  uint8_t PRESENCE_THRESHOLD = 100;      // default 200
+  uint8_t MOTION_THRESHOLD = 200;        // default 200
+  uint16_t TAMB_SHOCK_THRESHOLD = 2000;  // default 200
 
   uint8_t PRESENCE_HYST = 32;
   uint8_t MOTION_HYST = 32;
@@ -185,7 +185,7 @@ void STHS34PF80Component::update() {
   // check if data is ready
   if (data[0] & (1 << 2)) {
     // read function flags
-    uint8_t flags[0];
+    uint8_t flags[1];
     if (!this->read_byte(STHS34PF80_REGISTER_FUNC_STATUS, flags)) {
       ESP_LOGE(TAG, "Reading function status flags failed!");
       this->status_set_warning();
