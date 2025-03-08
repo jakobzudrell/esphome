@@ -1,0 +1,12 @@
+i2c:
+  - id: i2c_sths34pf80
+    scl: ${scl_pin}
+    sda: ${sda_pin}
+
+sensor:
+  - platform: sths34pf80
+    presence:
+      name: STHS34PF80 Presence
+    motion:
+      name: STHS34PF80 Motion
+    update_interval: 15s
