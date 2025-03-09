@@ -192,7 +192,8 @@ void STHS34PF80Component::dump_config() {
   uint8_t data;
   this->read_byte(STHS34PF80_REGISTER_SENS_DATA, &data);
   ESP_LOGCONFIG(TAG, "  Sensitivity: %d", data);
-  ESP_LOGCONFIG(TAG, "  Sensitivity: %d", (int16_t) ((int16_t) (data << 8) | 0x00));
+  ESP_LOGCONFIG(TAG, "  Sensitivity: %d", (int8_t) (data));
+  ESP_LOGCONFIG(TAG, "  Sensitivity: %d", (int8_t) (data * 16.0 + 2048));
 
   this->read_byte(STHS34PF80_REGISTER_LPF1, &data);
   ESP_LOGCONFIG(TAG, "  lpf_p_m: %d (on sensor: %d)", this->lpf_p_m_, (data & 0x38) >> 3);
