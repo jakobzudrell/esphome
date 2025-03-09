@@ -64,6 +64,8 @@ class STHS34PF80Component : public PollingComponent, public i2c::I2CDevice {
   uint8_t motion_hysteresis_;
   uint8_t tamb_shock_hysteresis_;
 
+  uint16_t sensitivity_;
+
   sensor::Sensor *presence_sensor_{nullptr};
   sensor::Sensor *motion_sensor_{nullptr};
   sensor::Sensor *ambient_temperature_sensor_{nullptr};

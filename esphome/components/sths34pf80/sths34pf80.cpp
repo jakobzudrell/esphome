@@ -83,6 +83,10 @@ void STHS34PF80Component::setup() {
     return;
   }
 
+  // get sensitivity
+  this->read_byte(STHS34PF80_REGISTER_SENS_DATA, (uint8_t *) &data);
+  this->sensitivity_ = (uint16_t) ((int8_t) data * 16 + 2048);
+
   // Reboot
   if (!this->write_byte(STHS34PF80_REGISTER_CTRL2, 0x80)) {
     this->error_code_ = WRITE_FAILED;
@@ -190,8 +194,7 @@ void STHS34PF80Component::dump_config() {
   }
 
   uint8_t data;
-  this->read_byte(STHS34PF80_REGISTER_SENS_DATA, (uint8_t *) &data);
-  ESP_LOGCONFIG(TAG, "  Sensitivity: %d", (uint16_t) ((int8_t) data * 16 + 2048));
+  ESP_LOGCONFIG(TAG, "  Sensitivity: %d", sensitivity_);
 
   this->read_byte(STHS34PF80_REGISTER_LPF1, &data);
   ESP_LOGCONFIG(TAG, "  lpf_p_m: %d (on sensor: %d)", this->lpf_p_m_, (data & 0x38) >> 3);
@@ -341,7 +344,7 @@ void STHS34PF80Component::update() {
     this->status_set_warning();
     return;
   }
-  this->object_temperature_sensor_->publish_state((int16_t) (((int16_t) h) << 8 | l));
+  this->object_temperature_sensor_->publish_state((int16_t) (((int16_t) h) << 8 | l) / this->sensitivity_);
 }
 }  // namespace sths34pf80
 }  // namespace esphome
