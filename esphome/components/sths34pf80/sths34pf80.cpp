@@ -191,6 +191,7 @@ void STHS34PF80Component::dump_config() {
 
   uint8_t data;
   this->read_byte(STHS34PF80_REGISTER_SENS_DATA, &data);
+  ESP_LOGCONFIG(TAG, "  Sensitivity: %d", data);
   ESP_LOGCONFIG(TAG, "  Sensitivity: %d", (int16_t) ((int16_t) (data << 8) | 0x00));
 
   this->read_byte(STHS34PF80_REGISTER_LPF1, &data);
@@ -334,7 +335,7 @@ void STHS34PF80Component::update() {
     this->status_set_warning();
     return;
   }
-  this->ambient_temperature_sensor_->publish_state((int16_t) (((int16_t) h) << 8 | l));
+  this->ambient_temperature_sensor_->publish_state((int16_t) (((int16_t) h) << 8 | l) / 100.0);
 
   if (!this->read_byte(STHS34PF80_REGISTER_TOBJECT_L, &l) || !this->read_byte(STHS34PF80_REGISTER_TOBJECT_H, &h)) {
     ESP_LOGE(TAG, "Reading register value failed!");
