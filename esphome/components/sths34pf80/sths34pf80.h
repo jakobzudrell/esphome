@@ -17,6 +17,12 @@ class STHS34PF80Component : public PollingComponent, public i2c::I2CDevice {
 
   void set_presence_sensor(sensor::Sensor *presence_sensor) { presence_sensor_ = presence_sensor; }
   void set_motion_sensor(sensor::Sensor *motion_sensor) { motion_sensor_ = motion_sensor; }
+  void set_ambient_temperature_sensor(sensor::Sensor *ambient_temperature_sensor) {
+    ambient_temperature_sensor_ = ambient_temperature_sensor;
+  }
+  void set_object_temperature_sensor(sensor::Sensor *object_temperature_sensor) {
+    object_temperature_sensor_ = object_temperature_sensor;
+  }
 
   void set_odr(uint8_t val) { odr_ = val; }
   void set_avg_t(uint8_t val) { avg_t_ = val; }
@@ -60,6 +66,8 @@ class STHS34PF80Component : public PollingComponent, public i2c::I2CDevice {
 
   sensor::Sensor *presence_sensor_{nullptr};
   sensor::Sensor *motion_sensor_{nullptr};
+  sensor::Sensor *ambient_temperature_sensor_{nullptr};
+  sensor::Sensor *object_temperature_sensor_{nullptr};
 };
 
 }  // namespace sths34pf80

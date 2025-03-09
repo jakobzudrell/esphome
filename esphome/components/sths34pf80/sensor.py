@@ -4,7 +4,9 @@ import esphome.config_validation as cv
 from esphome.const import (
     CONF_ID,
     DEVICE_CLASS_EMPTY,
+    DEVICE_CLASS_TEMPERATURE,
     STATE_CLASS_MEASUREMENT,
+    UNIT_CELSIUS,
     UNIT_EMPTY,
 )
 
@@ -48,6 +50,18 @@ CONFIG_SCHEMA = (
                 unit_of_measurement=UNIT_EMPTY,
                 accuracy_decimals=0,
                 device_class=DEVICE_CLASS_EMPTY,
+                state_class=STATE_CLASS_MEASUREMENT,
+            ),
+            cv.Optional("ambient_temperature"): sensor.sensor_schema(
+                unit_of_measurement=UNIT_CELSIUS,
+                accuracy_decimals=2,
+                device_class=DEVICE_CLASS_TEMPERATURE,
+                state_class=STATE_CLASS_MEASUREMENT,
+            ),
+            cv.Optional("object_temperature"): sensor.sensor_schema(
+                unit_of_measurement=UNIT_CELSIUS,
+                accuracy_decimals=2,
+                device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
             cv.Optional(CONF_ODR, default=0x04): cv.uint8_t,
@@ -102,3 +116,11 @@ async def to_code(config):
     if "motion" in config:
         sens = await sensor.new_sensor(config["motion"])
         cg.add(var.set_motion_sensor(sens))
+
+    if "ambient_temperature" in config:
+        sens = await sensor.new_sensor(config["ambient_temperature"])
+        cg.add(var.set_ambient_temperature_sensor(sens))
+
+    if "object_temperature" in config:
+        sens = await sensor.new_sensor(config["object_temperature"])
+        cg.add(var.set_object_temperature_sensor(sens))

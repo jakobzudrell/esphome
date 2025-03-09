@@ -34,6 +34,21 @@ static const uint8_t STHS34PF80_REGISTER_CFG_ADDR = 0x08;
 static const uint8_t STHS34PF80_REGISTER_CFG_DATA = 0x09;
 static const uint8_t STHS34PF80_REGISTER_PAGE_RW = 0x11;
 
+static const uint8_t STHS34PF80_REGISTER_TOBJECT_L = 0x26;
+static const uint8_t STHS34PF80_REGISTER_TOBJECT_H = 0x27;
+
+static const uint8_t STHS34PF80_REGISTER_TAMBIENT_L = 0x28;
+static const uint8_t STHS34PF80_REGISTER_TAMBIENT_H = 0x29;
+
+static const uint8_t STHS34PF80_REGISTER_TOBJ_COMP_L = 0x38;
+static const uint8_t STHS34PF80_REGISTER_TOBJ_COMP_H = 0x39;
+
+static const uint8_t STHS34PF80_REGISTER_TPRESENCE_L = 0x3A;
+static const uint8_t STHS34PF80_REGISTER_TPRESENCE_H = 0x3B;
+
+static const uint8_t STHS34PF80_REGISTER_TMOTION_L = 0x3C;
+static const uint8_t STHS34PF80_REGISTER_TMOTION_H = 0x3D;
+
 static const uint8_t STHS34PF80_REGISTER_PRESENCE_THS_L = 0x20;
 static const uint8_t STHS34PF80_REGISTER_PRESENCE_THS_H = 0x21;
 
@@ -311,6 +326,22 @@ void STHS34PF80Component::update() {
       this->motion_sensor_->publish_state(0);
     }
   }
+
+  uint8_t l;
+  uint8_t h;
+  if (!this->read_byte(STHS34PF80_REGISTER_TAMBIENT_L, &l) || !this->read_byte(STHS34PF80_REGISTER_TAMBIENT_H, &h)) {
+    ESP_LOGE(TAG, "Reading register value failed!");
+    this->status_set_warning();
+    return;
+  }
+  this->ambient_temperature_sensor_->publish_state((int16_t) (((int16_t) h) << 8 | l));
+
+  if (!this->read_byte(STHS34PF80_REGISTER_TOBJECT_L, &l) || !this->read_byte(STHS34PF80_REGISTER_TOBJECT_H, &h)) {
+    ESP_LOGE(TAG, "Reading register value failed!");
+    this->status_set_warning();
+    return;
+  }
+  this->object_temperature_sensor_->publish_state((int16_t) (((int16_t) h) << 8 | l));
 }
 }  // namespace sths34pf80
 }  // namespace esphome
