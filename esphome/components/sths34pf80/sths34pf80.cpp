@@ -165,6 +165,18 @@ void STHS34PF80Component::dump_config() {
   if (this->is_failed()) {
     ESP_LOGE(TAG, "%s", LOG_STR_ARG(this->error_code_));
   }
+
+  ESP_LOGCONFIG(TAG, "  lpf_p_m: %d (actual: %d)", this->lpf_p_m_, 0x00);
+  ESP_LOGCONFIG(TAG, "  lpf_m: %d (actual: %d)", this->lpf_m_, 0x00);
+  ESP_LOGCONFIG(TAG, "  lpf_p: %d (actual: %d)", this->lpf_p_, 0x00);
+  ESP_LOGCONFIG(TAG, "  lpf_a_t: %d (actual: %d)", this->lpf_a_t_, 0x00);
+  ESP_LOGCONFIG(TAG, "  presence_threshold: %d (actual: %d)", this->presence_threshold_, 0x00);
+  ESP_LOGCONFIG(TAG, "  motion_threshold: %d (actual: %d)", this->motion_threshold_, 0x00);
+  ESP_LOGCONFIG(TAG, "  tamb_shock_threshold: %d (actual: %d)", this->tamb_shock_threshold_, 0x00);
+  ESP_LOGCONFIG(TAG, "  presence_hysteresis: %d (actual: %d)", this->presence_hysteresis_, 0x00);
+  ESP_LOGCONFIG(TAG, "  motion_hysteresis: %d (actual: %d)", this->motion_hysteresis_, 0x00);
+  ESP_LOGCONFIG(TAG, "  tamb_shock_hysteresis: %d (actual: %d)", this->tamb_shock_hysteresis_, 0x00);
+
   LOG_UPDATE_INTERVAL(this);
   LOG_SENSOR("  ", "Presence", this->presence_sensor_);
   LOG_SENSOR("  ", "Motion", this->motion_sensor_);
