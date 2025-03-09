@@ -17,6 +17,10 @@ STHS34PF80Component = sths34pf80_ns.class_(
     "STHS34PF80Component", cg.PollingComponent, i2c.I2CDevice
 )
 
+CONF_ODR = "odr"
+CONF_AVG_T = "avg_t"
+CONF_AVG_TMOS = "avg_tmos"
+
 CONF_LPF_P_M = "lpf_p_m"
 CONF_LPF_M = "lpf_m"
 CONF_LPF_P = "lpf_p"
@@ -46,6 +50,9 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_EMPTY,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
+            cv.Optional(CONF_ODR, default=0x04): cv.uint8_t,
+            cv.Optional(CONF_AVG_T, default=0x00): cv.uint8_t,
+            cv.Optional(CONF_AVG_TMOS, default=0x03): cv.uint8_t,
             cv.Optional(CONF_LPF_P_M, default=0x00): cv.uint8_t,
             cv.Optional(CONF_LPF_M, default=0x04): cv.uint8_t,
             cv.Optional(CONF_LPF_P, default=0x04): cv.uint8_t,
@@ -63,6 +70,9 @@ CONFIG_SCHEMA = (
 )
 
 SETTING_MAP = {
+    CONF_ODR: "set_odr",
+    CONF_AVG_T: "set_avg_t",
+    CONF_AVG_TMOS: "set_avg_tmos",
     CONF_LPF_P_M: "set_lpf_p_m",
     CONF_LPF_M: "set_lpf_m",
     CONF_LPF_P: "set_lpf_p",

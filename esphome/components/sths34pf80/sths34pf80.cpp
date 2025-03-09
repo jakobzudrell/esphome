@@ -103,12 +103,6 @@ void STHS34PF80Component::setup() {
   // Read func status to clear DRDY
   this->read_byte(STHS34PF80_REGISTER_FUNC_STATUS, &data);
 
-  //// LOW PASS FILTER
-  uint8_t LPF_P_M = 0x00;  // ODR/9
-  uint8_t LPF_M = 0x04;    // ODR/200
-  uint8_t LPF_P = 0x04;    // ODR/200
-  uint8_t LPF_A_T = 0x02;  // ODR/50
-
   // LPF1
   this->write_byte(STHS34PF80_REGISTER_LPF1, (lpf_p_m_ << 3) | lpf_m_);
 
@@ -116,9 +110,7 @@ void STHS34PF80Component::setup() {
   this->write_byte(STHS34PF80_REGISTER_LPF2, (lpf_p_ << 3) | lpf_a_t_);
 
   //// AVG TRIM
-  uint8_t AVG_T = 0x00;
-  uint8_t AVG_TMOS = 0x03;
-  this->write_byte(STHS34PF80_REGISTER_AVG_TRIM, (AVG_T << 4 | AVG_TMOS));
+  this->write_byte(STHS34PF80_REGISTER_AVG_TRIM, (this->avg_t_ << 4 | this->avg_tmos_));
 
   //// GAIN
   this->write_byte(STHS34PF80_REGISTER_CTRL0, (0x07 << 4) | 0x81);
@@ -172,7 +164,7 @@ void STHS34PF80Component::setup() {
   this->write_byte(STHS34PF80_REGISTER_CTRL2, 0x00);    // disable access to embedded functions
 
   //// POWER UP
-  this->write_byte(STHS34PF80_REGISTER_CTRL1, 0x05);  // ODR 4Hz
+  this->write_byte(STHS34PF80_REGISTER_CTRL1, this->odr_);  // ODR 4Hz
 }
 
 void STHS34PF80Component::dump_config() {
@@ -183,6 +175,9 @@ void STHS34PF80Component::dump_config() {
   }
 
   uint8_t data;
+  this->read_byte(STHS34PF80_REGISTER_SENS_DATA, &data);
+  ESP_LOGCONFIG(TAG, "  Sensitivity: %d", (int16_t) ((int16_t) (data << 8) | 0x00));
+
   this->read_byte(STHS34PF80_REGISTER_LPF1, &data);
   ESP_LOGCONFIG(TAG, "  lpf_p_m: %d (on sensor: %d)", this->lpf_p_m_, (data & 0x38) >> 3);
   this->read_byte(STHS34PF80_REGISTER_LPF1, &data);
