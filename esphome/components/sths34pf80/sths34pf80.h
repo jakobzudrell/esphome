@@ -18,6 +18,17 @@ class STHS34PF80Component : public PollingComponent, public i2c::I2CDevice {
   void set_presence_sensor(sensor::Sensor *presence_sensor) { presence_sensor_ = presence_sensor; }
   void set_motion_sensor(sensor::Sensor *motion_sensor) { motion_sensor_ = motion_sensor; }
 
+  void set_lpf_p_m(uint8_t val) { lpf_p_m_ = val; }
+  void set_lpf_m(uint8_t val) { lpf_m_ = val; }
+  void set_lpf_p(uint8_t val) { lpf_p_ = val; }
+  void set_lpf_a_t(uint8_t val) { lpf_a_t_ = val; }
+  void set_presence_threshold(uint16_t val) { presence_threshold_ = val; }
+  void set_motion_threshold(uint16_t val) { motion_threshold_ = val; }
+  void set_tamb_shock_threshold(uint16_t val) { tamb_shock_threshold_ = val; }
+  void set_presence_hysteresis(uint8_t val) { presence_hysteresis_ = val; }
+  void set_motion_hysteresis(uint8_t val) { motion_hysteresis_ = val; }
+  void set_tamb_shock_hysteresis(uint8_t val) { tamb_shock_hysteresis_ = val; }
+
   enum ErrorCode {
     NONE = 0,
     DATA_CLEARED_TIMEOUT,
@@ -30,6 +41,17 @@ class STHS34PF80Component : public PollingComponent, public i2c::I2CDevice {
   } error_code_{NONE};
 
  protected:
+  uint8_t lpf_p_m_;
+  uint8_t lpf_m_;
+  uint8_t lpf_p_;
+  uint8_t lpf_a_t_;
+  uint16_t presence_threshold_;
+  uint16_t motion_threshold_;
+  uint16_t tamb_shock_threshold_;
+  uint8_t presence_hysteresis_;
+  uint8_t motion_hysteresis_;
+  uint8_t tamb_shock_hysteresis_;
+
   sensor::Sensor *presence_sensor_{nullptr};
   sensor::Sensor *motion_sensor_{nullptr};
 };

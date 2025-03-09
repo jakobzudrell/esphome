@@ -94,10 +94,10 @@ void STHS34PF80Component::setup() {
   uint8_t LPF_A_T = 0x02;  // ODR/50
 
   // LPF1
-  this->write_byte(STHS34PF80_REGISTER_LPF1, (LPF_P_M << 3) | LPF_M);
+  this->write_byte(STHS34PF80_REGISTER_LPF1, (lpf_p_m_ << 3) | lpf_m_);
 
   // LPF2
-  this->write_byte(STHS34PF80_REGISTER_LPF2, (LPF_P << 3) | LPF_A_T);
+  this->write_byte(STHS34PF80_REGISTER_LPF2, (lpf_p_ << 3) | lpf_a_t_);
 
   //// AVG TRIM
   uint8_t AVG_T = 0x00;
@@ -123,28 +123,28 @@ void STHS34PF80Component::setup() {
   this->write_byte(STHS34PF80_REGISTER_PAGE_RW, 0x40);  // enable write access to embedded functions
 
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, 0x20);
-  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, PRESENCE_THRESHOLD & 0x00ff);  // lower byte
+  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, presence_threshold_ & 0x00ff);  // lower byte
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, 0x21);
-  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, PRESENCE_THRESHOLD >> 8);  // upper byte
+  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, presence_threshold_ >> 8);  // upper byte
 
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, 0x22);
-  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, MOTION_THRESHOLD & 0x00ff);  // lower byte
+  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, motion_threshold_ & 0x00ff);  // lower byte
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, 0x23);
-  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, MOTION_THRESHOLD >> 8);  // upper byte
+  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, motion_threshold_ >> 8);  // upper byte
 
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, 0x24);
-  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, TAMB_SHOCK_THRESHOLD & 0x00ff);  // lower byte
+  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, tamb_shock_threshold_ & 0x00ff);  // lower byte
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, 0x25);
-  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, TAMB_SHOCK_THRESHOLD >> 8);  // upper byte
+  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, tamb_shock_threshold_ >> 8);  // upper byte
 
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, 0x27);
-  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, PRESENCE_HYST);
+  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, presence_hysteresis_);
 
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, 0x26);
-  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, MOTION_HYST);
+  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, motion_hysteresis_);
 
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, 0x29);
-  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, TAMB_SHOCK_HYST);
+  this->write_byte(STHS34PF80_REGISTER_CFG_DATA, tamb_shock_hysteresis_);
 
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, 0x28);
   this->write_byte(STHS34PF80_REGISTER_CFG_DATA, 0x04);  // TEMP_COMP
