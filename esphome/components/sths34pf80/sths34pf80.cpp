@@ -11,9 +11,11 @@ static const char *const TAG = "sths34pf80";
 // STHS34PF80 chip constants
 static const uint8_t STHS34PF80_BOOTING_MS = 5;  // Booting time in ms (also after reset, or going to high power)
 
-static const uint16_t STHS34PF80_PART_ID = 0xd3;  // The expected part id of the STHS34PF80
+static const uint8_t STHS34PF80_PART_ID = 0xd3;  // The expected part id of the STHS34PF80
 
 // Addresses of the STHS34PF80 registers
+static const uint8_t STHS34PF80_REGISTER_WHO_AM_I = 0x0f;
+
 static const uint8_t STHS34PF80_REGISTER_LPF1 = 0x0c;
 static const uint8_t STHS34PF80_REGISTER_LPF2 = 0x0d;
 
@@ -51,6 +53,21 @@ static const uint8_t STHS34PF80_REGISTER_RESET_ALGO = 0x2a;
 void STHS34PF80Component::setup() {
   ESP_LOGCONFIG(TAG, "Setting up STHS34PF80...");
 
+  uint8_t data;
+
+  // check part id
+  if (!this->read_byte(STHS34PF80_REGISTER_WHO_AM_I, &data)) {
+    this->error_code_ = READ_FAILED;
+    this->mark_failed();
+    return;
+  }
+
+  if (data != STHS34PF80_PART_ID) {
+    this->error_code_ = INVALID_ID;
+    this->mark_failed();
+    return;
+  }
+
   // Reboot
   if (!this->write_byte(STHS34PF80_REGISTER_CTRL2, 0x80)) {
     this->error_code_ = WRITE_FAILED;
@@ -61,21 +78,20 @@ void STHS34PF80Component::setup() {
   delay(STHS34PF80_BOOTING_MS);
 
   // Enter power down mode according to AN5867
-  uint8_t data[1];
-  this->read_byte(STHS34PF80_REGISTER_FUNC_STATUS, data);
+  this->read_byte(STHS34PF80_REGISTER_FUNC_STATUS, &data);
 
   // Wait until DRDY flag is cleared
   uint8_t counter = 0;
   while (counter < 100) {
-    this->read_byte(STHS34PF80_REGISTER_STATUS, data);
-    if (!(data[0] & 0x04)) {
+    this->read_byte(STHS34PF80_REGISTER_STATUS, &data);
+    if (!(data & 0x04)) {
       break;
     }
     counter++;
     delay(1);
   }
 
-  if (!(data[0] & 0x04)) {
+  if (!(data & 0x04)) {
     // Power down
     this->write_byte(STHS34PF80_REGISTER_CTRL1, 0x00);
   } else {
@@ -85,7 +101,7 @@ void STHS34PF80Component::setup() {
   }
 
   // Read func status to clear DRDY
-  this->read_byte(STHS34PF80_REGISTER_FUNC_STATUS, data);
+  this->read_byte(STHS34PF80_REGISTER_FUNC_STATUS, &data);
 
   //// LOW PASS FILTER
   uint8_t LPF_P_M = 0x00;  // ODR/9
@@ -166,7 +182,6 @@ void STHS34PF80Component::dump_config() {
     ESP_LOGE(TAG, "%s", LOG_STR_ARG(this->error_code_));
   }
 
-  // To read the algorithm configuration
   uint8_t data;
   this->read_byte(STHS34PF80_REGISTER_LPF1, &data);
   ESP_LOGCONFIG(TAG, "  lpf_p_m: %d (on sensor: %d)", this->lpf_p_m_, (data & 0x38) >> 3);
@@ -178,7 +193,40 @@ void STHS34PF80Component::dump_config() {
   this->read_byte(STHS34PF80_REGISTER_LPF2, &data);
   ESP_LOGCONFIG(TAG, "  lpf_a_t: %d (on sensor: %d)", this->lpf_a_t_, (data & 0x07));
 
-  // ENABLE READ ACCESS TO FUNCTIONS
+  this->read_byte(STHS34PF80_REGISTER_CTRL1, &data);
+  switch (data & 0x07) {
+    case 0:
+      ESP_LOGCONFIG(TAG, "  ODR Power Down (%d)", data & 0x07)
+      break;
+    case 1:
+      ESP_LOGCONFIG(TAG, "  ODR 0.25Hz (%d)", data & 0x07)
+      break;
+    case 2:
+      ESP_LOGCONFIG(TAG, "  ODR 0.5Hz (%d)", data & 0x07)
+      break;
+    case 3:
+      ESP_LOGCONFIG(TAG, "  ODR 1Hz (%d)", data & 0x07)
+      break;
+    case 4:
+      ESP_LOGCONFIG(TAG, "  ODR 2Hz (%d)", data & 0x07)
+      break;
+    case 5:
+      ESP_LOGCONFIG(TAG, "  ODR 4Hz (%d)", data & 0x07)
+      break;
+    case 6:
+      ESP_LOGCONFIG(TAG, "  ODR 8Hz (%d)", data & 0x07)
+      break;
+    case 7:
+      ESP_LOGCONFIG(TAG, "  ODR 15Hz (%d)", data & 0x07)
+      break;
+    case 8:
+      ESP_LOGCONFIG(TAG, "  ODR 30Hz (%d)", data & 0x07)
+      break;
+    default:
+      ESP_LOGCONFIG(TAG, "  ODR N/A")
+      break;
+  }
+
   this->write_byte(STHS34PF80_REGISTER_CTRL2, 0x10);    // enable access to embedded functions
   this->write_byte(STHS34PF80_REGISTER_PAGE_RW, 0x20);  // enable write access to embedded functions
 
