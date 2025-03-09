@@ -178,15 +178,15 @@ void STHS34PF80Component::dump_config() {
   this->read_byte(STHS34PF80_REGISTER_LPF2, &data);
   ESP_LOGCONFIG(TAG, "  lpf_a_t: %d (actual: %d)", this->lpf_a_t_, (data & 0x07));
 
-  uint16_t data;
-  this->read_byte(STHS34PF80_REGISTER_PRESENCE_THS_L, reinterpret_cast<uint8_t *>(&data), 2);
-  ESP_LOGCONFIG(TAG, "  presence_threshold: %d (actual: %d)", this->presence_threshold_, data);
+  uint16_t data1;
+  this->read_byte(STHS34PF80_REGISTER_PRESENCE_THS_L, reinterpret_cast<uint8_t *>(&data1), 2);
+  ESP_LOGCONFIG(TAG, "  presence_threshold: %d (actual: %d)", this->presence_threshold_, data1);
 
-  this->read_byte(STHS34PF80_REGISTER_MOTION_THS_L, reinterpret_cast<uint8_t *>(&data), 2);
-  ESP_LOGCONFIG(TAG, "  motion_threshold: %d (actual: %d)", this->motion_threshold_, data);
+  this->read_byte(STHS34PF80_REGISTER_MOTION_THS_L, reinterpret_cast<uint8_t *>(&data1), 2);
+  ESP_LOGCONFIG(TAG, "  motion_threshold: %d (actual: %d)", this->motion_threshold_, data1);
 
-  this->read_byte(STHS34PF80_REGISTER_TAMB_SHOCK_THS_L, reinterpret_cast<uint8_t *>(&data), 2);
-  ESP_LOGCONFIG(TAG, "  tamb_shock_threshold: %d (actual: %d)", this->tamb_shock_threshold_, data);
+  this->read_byte(STHS34PF80_REGISTER_TAMB_SHOCK_THS_L, reinterpret_cast<uint8_t *>(&data1), 2);
+  ESP_LOGCONFIG(TAG, "  tamb_shock_threshold: %d (actual: %d)", this->tamb_shock_threshold_, data1);
 
   ESP_LOGCONFIG(TAG, "  presence_hysteresis: %d (actual: %d)", this->presence_hysteresis_, 0x00);
   ESP_LOGCONFIG(TAG, "  motion_hysteresis: %d (actual: %d)", this->motion_hysteresis_, 0x00);
