@@ -337,14 +337,14 @@ void STHS34PF80Component::update() {
     this->status_set_warning();
     return;
   }
-  this->ambient_temperature_sensor_->publish_state((int16_t) (((int16_t) h) << 8 | l) / 100.0);
+  this->ambient_temperature_sensor_->publish_state(((int16_t) ((h << 8) | l)) / 100.0);
 
   if (!this->read_byte(STHS34PF80_REGISTER_TOBJECT_L, &l) || !this->read_byte(STHS34PF80_REGISTER_TOBJECT_H, &h)) {
     ESP_LOGE(TAG, "Reading register value failed!");
     this->status_set_warning();
     return;
   }
-  this->object_temperature_sensor_->publish_state((int16_t) (((int16_t) h) << 8 | l));
+  this->object_temperature_sensor_->publish_state(((int16_t) ((h << 8) | l)) / 100.0);
 }
 }  // namespace sths34pf80
 }  // namespace esphome
