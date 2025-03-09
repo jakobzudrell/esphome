@@ -344,7 +344,7 @@ void STHS34PF80Component::update() {
     this->status_set_warning();
     return;
   }
-  this->object_temperature_sensor_->publish_state(((int16_t) ((h << 8) + l)));
+  this->object_temperature_sensor_->publish_state(((uint16_t) ((h << 8) + l)));
 }
 }  // namespace sths34pf80
 }  // namespace esphome
