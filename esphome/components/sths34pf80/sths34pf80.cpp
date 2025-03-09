@@ -166,8 +166,11 @@ void STHS34PF80Component::dump_config() {
     ESP_LOGE(TAG, "%s", LOG_STR_ARG(this->error_code_));
   }
 
-  ESP_LOGCONFIG(TAG, "  lpf_p_m: %d (actual: %d)", this->lpf_p_m_, 0x00);
-  ESP_LOGCONFIG(TAG, "  lpf_m: %d (actual: %d)", this->lpf_m_, 0x00);
+  // To read the algorithm configuration
+
+  ESP_LOGCONFIG(TAG, "  lpf_p_m: %d (actual: %d)", this->lpf_p_m_,
+                (this->read_byte(STHS34PF80_REGISTER_LPF1) & 0x38) >> 3);
+  ESP_LOGCONFIG(TAG, "  lpf_m: %d (actual: %d)", this->lpf_m_, (this->read_byte(STHS34PF80_REGISTER_LPF1) & 0x07));
   ESP_LOGCONFIG(TAG, "  lpf_p: %d (actual: %d)", this->lpf_p_, 0x00);
   ESP_LOGCONFIG(TAG, "  lpf_a_t: %d (actual: %d)", this->lpf_a_t_, 0x00);
   ESP_LOGCONFIG(TAG, "  presence_threshold: %d (actual: %d)", this->presence_threshold_, 0x00);
