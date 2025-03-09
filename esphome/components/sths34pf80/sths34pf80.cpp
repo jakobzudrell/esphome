@@ -169,14 +169,14 @@ void STHS34PF80Component::dump_config() {
   // To read the algorithm configuration
   uint8_t data;
   this->read_byte(STHS34PF80_REGISTER_LPF1, &data);
-  ESP_LOGCONFIG(TAG, "  lpf_p_m: %d (actual: %d)", this->lpf_p_m_, (data & 0x38) >> 3);
+  ESP_LOGCONFIG(TAG, "  lpf_p_m: %d (on sensor: %d)", this->lpf_p_m_, (data & 0x38) >> 3);
   this->read_byte(STHS34PF80_REGISTER_LPF1, &data);
-  ESP_LOGCONFIG(TAG, "  lpf_m: %d (actual: %d)", this->lpf_m_, (data & 0x07));
+  ESP_LOGCONFIG(TAG, "  lpf_m: %d (on sensor: %d)", this->lpf_m_, (data & 0x07));
 
   this->read_byte(STHS34PF80_REGISTER_LPF2, &data);
-  ESP_LOGCONFIG(TAG, "  lpf_p: %d (actual: %d)", this->lpf_p_, (data & 0x38) >> 3);
+  ESP_LOGCONFIG(TAG, "  lpf_p: %d (on sensor: %d)", this->lpf_p_, (data & 0x38) >> 3);
   this->read_byte(STHS34PF80_REGISTER_LPF2, &data);
-  ESP_LOGCONFIG(TAG, "  lpf_a_t: %d (actual: %d)", this->lpf_a_t_, (data & 0x07));
+  ESP_LOGCONFIG(TAG, "  lpf_a_t: %d (on sensor: %d)", this->lpf_a_t_, (data & 0x07));
 
   // ENABLE READ ACCESS TO FUNCTIONS
   this->write_byte(STHS34PF80_REGISTER_CTRL2, 0x10);    // enable access to embedded functions
@@ -192,7 +192,8 @@ void STHS34PF80Component::dump_config() {
   // read upper byte
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, STHS34PF80_REGISTER_PRESENCE_THS_H);
   this->read_byte(STHS34PF80_REGISTER_CFG_DATA, &data_high);
-  ESP_LOGCONFIG(TAG, "  presence_threshold: %d (actual: %d)", this->presence_threshold_, (data_high << 8) | data_low);
+  ESP_LOGCONFIG(TAG, "  presence_threshold: %d (on sensor: %d)", this->presence_threshold_,
+                (data_high << 8) | data_low);
 
   // read lower byte
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, STHS34PF80_REGISTER_MOTION_THS_L);
@@ -201,7 +202,7 @@ void STHS34PF80Component::dump_config() {
   // read upper byte
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, STHS34PF80_REGISTER_MOTION_THS_H);
   this->read_byte(STHS34PF80_REGISTER_CFG_DATA, &data_high);
-  ESP_LOGCONFIG(TAG, "  motion_threshold: %d (actual: %d)", this->motion_threshold_, (data_high << 8) | data_low);
+  ESP_LOGCONFIG(TAG, "  motion_threshold: %d (on sensor: %d)", this->motion_threshold_, (data_high << 8) | data_low);
 
   // read lower byte
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, STHS34PF80_REGISTER_TAMB_SHOCK_THS_L);
@@ -210,12 +211,20 @@ void STHS34PF80Component::dump_config() {
   // read upper byte
   this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, STHS34PF80_REGISTER_TAMB_SHOCK_THS_H);
   this->read_byte(STHS34PF80_REGISTER_CFG_DATA, &data_high);
-  ESP_LOGCONFIG(TAG, "  tamb_shock_threshold: %d (actual: %d)", this->tamb_shock_threshold_,
+  ESP_LOGCONFIG(TAG, "  tamb_shock_threshold: %d (on sensor: %d)", this->tamb_shock_threshold_,
                 (data_high << 8) | data_low);
 
-  ESP_LOGCONFIG(TAG, "  presence_hysteresis: %d (actual: %d)", this->presence_hysteresis_, 0x00);
-  ESP_LOGCONFIG(TAG, "  motion_hysteresis: %d (actual: %d)", this->motion_hysteresis_, 0x00);
-  ESP_LOGCONFIG(TAG, "  tamb_shock_hysteresis: %d (actual: %d)", this->tamb_shock_hysteresis_, 0x00);
+  this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, STHS34PF80_REGISTER_PRESENCE_HYST);
+  this->read_byte(STHS34PF80_REGISTER_CFG_DATA, &data);
+  ESP_LOGCONFIG(TAG, "  presence_hysteresis: %d (on sensor: %d)", this->presence_hysteresis_, data);
+
+  this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, STHS34PF80_REGISTER_MOTION_HYST);
+  this->read_byte(STHS34PF80_REGISTER_CFG_DATA, &data);
+  ESP_LOGCONFIG(TAG, "  motion_hysteresis: %d (on sensor: %d)", this->motion_hysteresis_, data);
+
+  this->write_byte(STHS34PF80_REGISTER_CFG_ADDR, STHS34PF80_REGISTER_TAMB_SHOCK_HYST);
+  this->read_byte(STHS34PF80_REGISTER_CFG_DATA, &data);
+  ESP_LOGCONFIG(TAG, "  tamb_shock_hysteresis: %d (on sensor: %d)", this->tamb_shock_hysteresis_, data);
 
   this->write_byte(STHS34PF80_REGISTER_PAGE_RW, 0x00);  // disable write access to embedded functions
   this->write_byte(STHS34PF80_REGISTER_CTRL2, 0x00);    // disable access to embedded functions
