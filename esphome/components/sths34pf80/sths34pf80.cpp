@@ -196,34 +196,34 @@ void STHS34PF80Component::dump_config() {
   this->read_byte(STHS34PF80_REGISTER_CTRL1, &data);
   switch (data & 0x07) {
     case 0:
-      ESP_LOGCONFIG(TAG, "  ODR Power Down (%d)", data & 0x07)
+      ESP_LOGCONFIG(TAG, "  ODR Power Down (%d)", data & 0x07);
       break;
     case 1:
-      ESP_LOGCONFIG(TAG, "  ODR 0.25Hz (%d)", data & 0x07)
+      ESP_LOGCONFIG(TAG, "  ODR 0.25Hz (%d)", data & 0x07);
       break;
     case 2:
-      ESP_LOGCONFIG(TAG, "  ODR 0.5Hz (%d)", data & 0x07)
+      ESP_LOGCONFIG(TAG, "  ODR 0.5Hz (%d)", data & 0x07);
       break;
     case 3:
-      ESP_LOGCONFIG(TAG, "  ODR 1Hz (%d)", data & 0x07)
+      ESP_LOGCONFIG(TAG, "  ODR 1Hz (%d)", data & 0x07);
       break;
     case 4:
-      ESP_LOGCONFIG(TAG, "  ODR 2Hz (%d)", data & 0x07)
+      ESP_LOGCONFIG(TAG, "  ODR 2Hz (%d)", data & 0x07);
       break;
     case 5:
-      ESP_LOGCONFIG(TAG, "  ODR 4Hz (%d)", data & 0x07)
+      ESP_LOGCONFIG(TAG, "  ODR 4Hz (%d)", data & 0x07);
       break;
     case 6:
-      ESP_LOGCONFIG(TAG, "  ODR 8Hz (%d)", data & 0x07)
+      ESP_LOGCONFIG(TAG, "  ODR 8Hz (%d)", data & 0x07);
       break;
     case 7:
-      ESP_LOGCONFIG(TAG, "  ODR 15Hz (%d)", data & 0x07)
+      ESP_LOGCONFIG(TAG, "  ODR 15Hz (%d)", data & 0x07);
       break;
     case 8:
-      ESP_LOGCONFIG(TAG, "  ODR 30Hz (%d)", data & 0x07)
+      ESP_LOGCONFIG(TAG, "  ODR 30Hz (%d)", data & 0x07);
       break;
     default:
-      ESP_LOGCONFIG(TAG, "  ODR N/A")
+      ESP_LOGCONFIG(TAG, "  ODR N/A");
       break;
   }
 
